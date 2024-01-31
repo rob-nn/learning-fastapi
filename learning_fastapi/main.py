@@ -12,11 +12,9 @@ async def root():
 async def post():
     return {"message": "hello from post route"}
 
-    
 @app.put("/")
 async def put():
     return {"message": "hello from put route"}
-
 
 @app.get('/item/{item_id}')
 async def get_item(item_id: int):
@@ -49,3 +47,18 @@ async def get_food(food_name: FoodEnum):
         return {"food_name": food_name, "message": "you are still healthy, byt like sweet things"}
 
     return {"food_name": food_name, "message": "I like chocolate milk"}
+
+fake_item_db = [{"item_name": "foo"}, {"item_name": "Bar"}, {"intem_name": "Baz"}]
+
+@app.get("/items")
+async def list_items(skip: int = 0, limit: int = 10):
+    return fake_item_db [skip: skip + limit]
+
+@app.get("/items/{item_id}") 
+async def get_item(item_id: str, requested_param: str, q: str | None = None, short: bool = True) -> dict:
+    item = {"item_id": item_id, "requested_param": requested_param}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update({"description": "Helllooowrerwe it's my description"})
+    return item
