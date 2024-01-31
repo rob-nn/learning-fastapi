@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from enum import Enum
 from pydantic import BaseModel
 
@@ -70,7 +70,7 @@ class Item(BaseModel):
     price: float
     tax: float | None = None
 
-@app.post("/items/")
+@app.post("/items")
 async def create_item(item: Item):
 
     item_dict = item.model_dump()
@@ -86,3 +86,10 @@ async def create_item_with_put(item_id: int, item: Item, q: str | None = None):
     result = {"item_id": item_id, **item.model_dump()}
     result.update({"q": q})
     return result
+
+@app.get("/read_items")
+async def read_item(q: str | None = Query(..., min_length=3, max_length=10, regex="^fixedquery$")):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
