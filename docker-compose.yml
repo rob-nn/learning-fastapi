@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  learning-fastapi:
+    image: learning-fastapi
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t:
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/service
